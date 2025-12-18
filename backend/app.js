@@ -13,30 +13,27 @@ const app = express();
 // PORT
 const PORT = process.env.PORT || 3000;
 
-// ✅ Correct allowed origins
+const cors = require("cors");
+
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://recharge-hub-frontend.onrender.com",
+  "https://rechargehub-chi.vercel.app",   // your Vercel frontend
+  "https://mobile-rechargehub-frontend.onrender.com"
 ];
 
-// ✅ CORS CONFIG (CORRECT)
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow server-to-server / Postman
-      if (!origin) return callback(null, true);
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed"));
-      }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
 
 // JSON parser
 app.use(express.json());
@@ -61,3 +58,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
