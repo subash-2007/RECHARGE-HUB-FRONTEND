@@ -143,9 +143,7 @@ const App = () => {
       {/* Footer */}
       <footer className="mt-20 py-8 text-center text-gray-400 text-sm border-t border-gray-200 bg-white/50 backdrop-blur-sm">
         <p>© 2024 RechargeHub. All rights reserved.</p>
-        <p className="mt-2">
-          Supported Operators: Jio, Airtel, Vi, BSNL
-        </p>
+        <p className="mt-2">Supported Operators: Jio, Airtel, Vi, BSNL</p>
       </footer>
 
       {/* Modals */}
