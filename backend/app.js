@@ -13,8 +13,6 @@ const app = express();
 // PORT
 const PORT = process.env.PORT || 3000;
 
-const cors = require("cors");
-
 const allowedOrigins = [
   "http://localhost:5173",
   "https://rechargehub-chi.vercel.app",   // your Vercel frontend
@@ -58,4 +56,5 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+
 
