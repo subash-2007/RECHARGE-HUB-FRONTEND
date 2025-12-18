@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PROVIDERS } from "./constants";
+
 import Navbar from "./components/Navbar";
 import LandingPage from "./components/LandingPage";
 import HomePage from "./components/HomePage";
@@ -10,12 +11,15 @@ import AuthModal from "./components/AuthModal";
 import LoadingPage from "./components/LoadingPage";
 
 const App = () => {
+  // UI & App State
   const [selectedProvider, setSelectedProvider] = useState("JIO");
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [mobileNumber, setMobileNumber] = useState("");
   const [currentPage, setCurrentPage] = useState("home");
   const [showLanding, setShowLanding] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Recharge State
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   // Auth State
   const [user, setUser] = useState(null);
@@ -24,14 +28,16 @@ const App = () => {
 
   const currentTheme = PROVIDERS[selectedProvider];
 
+  // Splash Screen Loader
   useEffect(() => {
-    // Simulate initial loading for splash screen
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2500);
+
     return () => clearTimeout(timer);
   }, []);
 
+  // Recharge Click
   const handleRechargeClick = (plan) => {
     if (!user) {
       setPendingPlan(plan);
@@ -47,6 +53,7 @@ const App = () => {
     setSelectedPlan(plan);
   };
 
+  // Login Success
   const handleLoginSuccess = (loggedInUser) => {
     setUser(loggedInUser);
     setIsAuthModalOpen(false);
@@ -58,10 +65,19 @@ const App = () => {
     }
   };
 
+  // Logout
+  const handleLogout = () => {
+    setUser(null);
+    setShowLanding(true);
+    setCurrentPage("home");
+  };
+
+  // Loading Screen
   if (isLoading) {
     return <LoadingPage />;
   }
 
+  // Landing Page
   if (showLanding && !user) {
     return (
       <>
@@ -81,16 +97,16 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen pb-20 transition-colors duration-500 bg-gray-50">
-      {/* Navigation */}
+    <div className="min-h-screen pb-20 bg-gray-50 transition-colors duration-500">
+      {/* Navbar Section */}
       <div className="relative pt-6 px-4 bg-white">
         <div className="absolute inset-0 z-0 opacity-10">
           <div
-            className={`absolute -top-24 -left-24 w-96 h-96 rounded-full bg-gradient-to-br ${currentTheme.gradient} blur-3xl transition-colors duration-500`}
-          ></div>
+            className={`absolute -top-24 -left-24 w-96 h-96 rounded-full bg-gradient-to-br ${currentTheme.gradient} blur-3xl`}
+          />
           <div
-            className={`absolute top-0 right-0 w-64 h-64 rounded-full bg-gradient-to-bl ${currentTheme.gradient} blur-3xl transition-colors duration-500`}
-          ></div>
+            className={`absolute top-0 right-0 w-64 h-64 rounded-full bg-gradient-to-bl ${currentTheme.gradient} blur-3xl`}
+          />
         </div>
 
         <Navbar
@@ -99,14 +115,11 @@ const App = () => {
           currentPage={currentPage}
           onPageChange={setCurrentPage}
           onAuthClick={() => setIsAuthModalOpen(true)}
-          onLogout={() => {
-            setUser(null);
-            setShowLanding(true);
-          }}
+          onLogout={handleLogout}
         />
       </div>
 
-      {/* Page Content */}
+      {/* Pages */}
       {currentPage === "home" && (
         <HomePage
           selectedProvider={selectedProvider}
@@ -130,10 +143,12 @@ const App = () => {
       {/* Footer */}
       <footer className="mt-20 py-8 text-center text-gray-400 text-sm border-t border-gray-200 bg-white/50 backdrop-blur-sm">
         <p>© 2024 RechargeHub. All rights reserved.</p>
-        <p className="mt-2">Supported Operators: Jio, Airtel, Vi, BSNL</p>
+        <p className="mt-2">
+          Supported Operators: Jio, Airtel, Vi, BSNL
+        </p>
       </footer>
 
-      {/* Global Components */}
+      {/* Modals */}
       <RechargeModal
         plan={selectedPlan}
         theme={currentTheme}
